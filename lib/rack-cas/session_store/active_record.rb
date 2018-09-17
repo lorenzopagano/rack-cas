@@ -1,7 +1,8 @@
 module RackCAS
   module ActiveRecordStore
-    class Session < ActiveRecord::Base
-    end
+    class Session < ActiveRecord::Base; end
+    class User < ActiveRecord::Base; end
+
 
     def self.destroy_session_by_cas_ticket(cas_ticket)
       affected = Session.where(cas_ticket: cas_ticket).delete_all
@@ -41,8 +42,20 @@ module RackCAS
       else
         Session.find_or_initialize_by_session_id(sid)
       end
+
+      #return unless session_data['cas']
+
+      userdata = {
+        username: session_data['cas']['user'],
+        email: session_data['cas']['extra_attributes']['email'].downcase,
+        first_name: session_data['cas']['extra_attributes']['first_name'],
+        last_name: session_data['cas']['extra_attributes']['last_name']
+      }
+      current_user = User.where(username: session_data['cas']['user']).first_or_create(userdata)
+
       session.data = pack(session_data)
       session.cas_ticket = cas_ticket
+      session.user_id = current_user.id
       success = session.save
 
       success ? session.session_id : false
