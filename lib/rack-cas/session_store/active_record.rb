@@ -43,7 +43,7 @@ module RackCAS
         Session.find_or_initialize_by_session_id(sid)
       end
 
-      #return unless session_data['cas']
+      return unless session_data['cas']
 
       userdata = {
         username: session_data['cas']['user'],
