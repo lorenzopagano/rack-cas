@@ -1,7 +1,7 @@
 module RackCAS
   module ActiveRecordStore
-    class Session < ActiveRecord::Base; end
-    class User < ActiveRecord::Base; end
+    # class Session < ActiveRecord::Base; end
+    # class User < ActiveRecord::Base; end
 
 
     def self.destroy_session_by_cas_ticket(cas_ticket)
